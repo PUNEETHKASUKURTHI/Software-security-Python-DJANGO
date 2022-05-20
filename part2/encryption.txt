@@ -1,0 +1,8 @@
+To encrypt the database i imported the djfernet library and installed fernet_fields and used the following commands to encrypt and changed the card data fernet_fields
+from fernet_fields import EncryptedTextField
+ data = EncryptedTextField() such that the data gets encrypted following the DJfernet library usermanual
+
+ I have installed python decouple to manage the secret keys
+ Here i imported decouple in the settings.py field to manage the secret key andand configured the secret key using 
+ SECRET_KEY = config('SECRET_KEY')
+ and created a .env file in the repository and saved the previous key in it.

@@ -1,0 +1,19 @@
+XSS
+To get a XSS vulnerability I tried putting a alert script in the gift.html page where there the directory is marked safe in the code which allows us to pass this script and giving an XSS vulnerability
+<script>alert(" ")</script> in the gift.html directory in the url 127.0.0.1:8000/gift.html?director=<script>alert(“hello”)</script>. 
+Fix 
+ We could prevent this by removing the safe parameter beside the director {{direcotor|safe}}
+
+CSRF 
+
+Going throgh the code I could see that csrf token is missing making it vulnerable, so by submitting the form action into the url we can create a button type function when pressed which automatically sends a gift to a different user. We could prevent this by adding a csrf token
+gift.html?director=<form action=http://127.0.0.1:8000/gift/0 method=POST><input type=hidden name=amount value=95><input type=hidden name=username value=user2><input type=submit value=giftcard></form>
+
+SQL injection
+I found an SQL inection where when you change the parameter value in the downloaded giftcard and upload it into the use card box, the database gets injected with the union command i gave and sends out the ouput in the website. I sent a giftcard into the field of usecard in the website and modified the giftcard with following
+{"merchant_id": "NYU Apparel Card", "customer_id": "user1", "total_value": "95", "records": [{"record_type": "amount_change", "amount_added": 2000, "signature": "7d3a6cc1cc055071c341961dacb72308' UNION Select password from LegacySite_user where LegacySite_user.username='admin';--"}]} and after submiting i was able to retreive the password of admin.
+(000000000000000000000000000078d2$18821d89de11ab18488fdc0a01f1ddf4d290e198b0f80cd4974fc031dc2615a3)
+ Previously it used card_query = Card.objects.raw('select id from LegacySite_card where data LIKE \'%%%s%%\'' % signature) so we were able to pass the giftcard to retreive password
+Fix        #card_query=Card.objects.filter(data__contains=signature)
+
+If we could slide into the database the salted passwords are same for every password so we could change this we get unique passwords

@@ -1,0 +1,5 @@
+XSS Fix
+remove safe beside director in the gift.html
+
+CSRF
+add a CSRF token to the code.
